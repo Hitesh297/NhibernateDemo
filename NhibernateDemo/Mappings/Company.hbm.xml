@@ -1,0 +1,16 @@
+﻿<?xml version="1.0"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="NhibernateDemo"
+    namespace="NhibernateDemo">
+
+  <class name="NhibernateDemo.Models.Company" table="Company" >
+    <id name="Id" column="Company_Id">
+      <generator class="increment"/>
+    </id>
+    <property name="Name" column="Registered_Name"/>
+    <bag name="Persons" cascade="all-delete-orphan" inverse="true">
+      <key column="Company_Id" not-null="true"/>
+      <one-to-many class="NhibernateDemo.Models.Person" />
+    </bag>
+  </class>
+
+</hibernate-mapping>
