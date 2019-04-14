@@ -1,0 +1,38 @@
+create table admin.Person(
+Person_Id int NOT NULL,
+Full_Name varchar(255),
+Company_Id int NOT NULL,
+Primary Key (Person_Id)
+);
+
+create table admin.Company(
+Company_Id int NOT NULL,
+Registered_Name varchar(255),
+Primary Key (Company_Id)
+);
+
+alter table admin.Person 
+add constraint fk_Company_Id foreign key(Company_Id) 
+references admin.Company(Company_Id);
+
+ ALTER TABLE admin.Person alter COLUMN Company_Id set not null;
+
+select tabschema, tabname
+from sysibmadm.admintabinfo
+where reorg_pending = 'Y';
+
+select * from admin.Person;
+select * from admin.Company;
+
+delete from admin.Company;
+
+call sysproc.admin_cmd('reorg table admin.Person');
+
+SELECT C.TABSCHEMA, C.TABNAME, C.COLNAME
+FROM SYSCAT.TABLES AS T,
+SYSCAT.COLUMNS AS C
+WHERE T.TBSPACEID = 3
+AND T.TABLEID = 5
+AND C.COLNO = 0
+AND C.TABSCHEMA = T.TABSCHEMA
+AND C.TABNAME = T.TABNAME
