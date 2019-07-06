@@ -1,0 +1,49 @@
+pipeline { 
+    agent any 
+    stages {
+        stage('Build') { 
+            steps { 
+               powershell('''
+			   
+			   $env:WORKSPACE = $env:WORKSPACE.Replace('\\', '\\\\')
+			   Write-Output $env:WORKSPACE 
+			   $SolutionPath = "$env:WORKSPACE\\NhibernateDemo.sln"
+			   
+			   Write-Output "Solution Path: $SolutionPath"
+			   
+			   nuget restore $SolutionPath 
+			   & 'C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe' $SolutionPath 
+			   
+			   
+			   
+			   ''')
+			   
+			   
+            }
+        }
+        stage('Test'){
+            steps {
+				script{
+					try{
+               powershell('''
+			   Write-Output "test"
+			   ''')
+				}
+				catch(err)
+				{
+					throw err
+				}
+			
+				}
+               
+            }
+        }
+        stage('Deploy') {
+            steps {
+               powershell('''
+			   Write-Output "Deploy test"
+			   ''')
+            }
+        }
+    }
+}
